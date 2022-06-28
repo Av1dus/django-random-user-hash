@@ -1,3 +1,9 @@
+import hashlib
+import random
+
+
+
+
 class User:
     first: str
     last: str
@@ -14,7 +20,7 @@ class User:
         self.password2 = p2
         self.username = u
 
-    def gen_seed_value(self,):
+    def gen_seed_value(self,salt:int) -> int:
         x = {
             "1":self.first,
             "2":self.last,
@@ -25,17 +31,16 @@ class User:
         }
         seed = 0
         for attr in x:
-            print(attr,x[attr])
             seed += self.attr_int_value(x[attr])
-        return seed
+        return seed + salt
 
-    def attr_int_value(self, attr):
+    def attr_int_value(self, attr) -> list:
         value = 0
         for c in attr:
             value += ord(c)
         return value
 
-    def as_attr_list(self,):
+    def as_attr_list(self,) -> list:
         attr_list = [
             self.first,
             self.last,
@@ -45,3 +50,19 @@ class User:
             self.username
         ]
         return attr_list
+
+    def test(self,) -> str:
+        return "This is a testMessage"
+
+    def gen_sha1(self,level: int,salt: int) -> str:
+        seed = self.gen_seed_value(salt=salt)
+        print(seed)
+        random.seed(a=seed,version=level)
+        order = [random.randint(0,5) for i in range(0,6)]
+        print(order)
+        attrs = self.as_attr_list()
+        hash_str = ""
+        for o in order:
+            print(o,attrs[o])
+            hash_str += attrs[o]
+        return hashlib.sha1(bytes(hash_str,'utf-8')).hexdigest()
