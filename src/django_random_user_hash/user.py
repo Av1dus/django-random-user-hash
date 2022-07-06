@@ -56,13 +56,10 @@ class User:
 
     def gen_sha1(self,level: int,salt: int) -> str:
         seed = self.gen_seed_value(salt=salt)
-        print(seed)
         random.seed(a=seed,version=level)
-        order = [random.randint(0,5) for i in range(0,6)]
-        print(order)
+        order = [random.randint(0,5) for i in range(0,6)]        
         attrs = self.as_attr_list()
         hash_str = ""
         for o in order:
-            print(o,attrs[o])
             hash_str += attrs[o]
         return hashlib.sha1(bytes(hash_str,'utf-8')).hexdigest()
